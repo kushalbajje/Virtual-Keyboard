@@ -1,0 +1,42 @@
+.car {
+    background: #fafafa;
+}
+
+.keyLayout1 {
+    height: 6vh;
+    width: 6vh;
+    text-align: center;
+}
+
+.keyLayout2 {
+    height: 6vh;
+    width: 10vh;
+}
+
+.keyLayout3 {
+    height: 6vh;
+    width: 11.4vh;
+}
+
+.keyLayout4 {
+    height: 6vh;
+    width: 14.8vh;
+}
+
+.keyboard {
+    min-width: 500px;
+    background: #111;
+}
+
+.row {
+    justify-content: center;
+}
+
+p {
+    font-family: sans-serif;
+    font-weight: 500;
+}
+
+.input {
+    width: 60%;
+}
