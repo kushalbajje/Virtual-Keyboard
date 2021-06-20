@@ -99,8 +99,9 @@ var VirtualKeyboard = /** @class */ (function () {
         this.keyboardLayout.addEventListener('click', this.clickKeyboard.bind(this));
     }
     VirtualKeyboard.prototype.generateMetadataForAlphabets = function () {
-        for (var i = 97; i < 123; i++) {
-            this.alphabetKeys.push(i);
+        var qwertyLayout = "qwertyuiopasdfghjklzxcvbnm";
+        for (var i = 0; i < qwertyLayout.length; i++) {
+            this.alphabetKeys.push(qwertyLayout.charCodeAt(i));
         }
     };
     VirtualKeyboard.prototype.generateMetadataForFirstRow = function () {
@@ -242,21 +243,27 @@ var VirtualKeyboard = /** @class */ (function () {
                 break;
             default: break;
         }
-        if (this.isCapsLockOn && !this.isShiftOn) {
-            var capsLockKey = document.getElementById("" + this.capsLock);
-            capsLockKey.className = 'keyLayout3 primaryKeyStyle car btn shadow mx-1 text-center selected';
-            this.toUpperCase();
-        }
-        else if (!this.isCapsLockOn && !this.isShiftOn) {
-            var capsLockKey = document.getElementById("" + this.capsLock);
-            capsLockKey.className = 'keyLayout3 primaryKeyStyle car btn shadow mx-1 text-center not-selected';
-            this.toLowerCase();
-        }
-        else if (this.isShiftOn && !this.isCapsLockOn) {
-            this.toUpperCase();
-        }
-        else if (this.isCapsLockOn && this.isShiftOn) {
-            this.toLowerCase();
+        if (Number(key) == this.capsLock || Number(key) == this.shift) {
+            if (this.isCapsLockOn && !this.isShiftOn) {
+                var capsLockKey = document.getElementById("" + this.capsLock);
+                capsLockKey.className = 'keyLayout3 primaryKeyStyle car btn shadow mx-1 text-center selected';
+                this.toUpperCase();
+                this.shiftKeyAction(this.isCapsLockOn && !this.isShiftOn);
+            }
+            else if (!this.isCapsLockOn && !this.isShiftOn) {
+                var capsLockKey = document.getElementById("" + this.capsLock);
+                capsLockKey.className = 'keyLayout3 primaryKeyStyle car btn shadow mx-1 text-center not-selected';
+                this.toLowerCase();
+                this.shiftKeyAction(!this.isCapsLockOn && !this.isShiftOn);
+            }
+            else if (this.isShiftOn && !this.isCapsLockOn) {
+                this.toUpperCase();
+                this.shiftKeyAction(this.isShiftOn && !this.isCapsLockOn);
+            }
+            else if (this.isCapsLockOn && this.isShiftOn) {
+                this.toLowerCase();
+                this.shiftKeyAction(this.isCapsLockOn && this.isShiftOn);
+            }
         }
         if (this.isShiftOn) {
             // If shift is ON then updating the keys to show special characters 
@@ -281,10 +288,19 @@ var VirtualKeyboard = /** @class */ (function () {
         // This block shuffels the alphabet in the keyboard when an alphabet is pressed
         if (this.isAlphabetKeys(Number(key))) {
             this.shuffle(this.alphabetKeys);
+            for (var i = 97, j = 0; i < 123 && j < 26; i++, j++) {
+                var characterKey = document.getElementById("" + i);
+                characterKey.innerHTML = "" + String.fromCharCode(this.alphabetKeys[j]);
+                characterKey.classList.add('primaryKeyStyle');
+            }
         }
-        for (var i = 97, j = 0; i < 123; i++, j++) {
-            var characterKey = document.getElementById("" + i);
-            characterKey.innerHTML = "" + String.fromCharCode(this.alphabetKeys[j]);
+    };
+    VirtualKeyboard.prototype.shiftKeyAction = function (toUpper) {
+        for (var i = 0; i < this.alphabetKeys.length; i++) {
+            var key = toUpper ? String.fromCharCode(this.alphabetKeys[i]).toLowerCase().charCodeAt(0) :
+                String.fromCharCode(this.alphabetKeys[i]).toUpperCase().charCodeAt(0);
+            var characterKey = document.getElementById("" + key);
+            characterKey.innerHTML = "" + String.fromCharCode(this.alphabetKeys[i]);
             characterKey.classList.add('primaryKeyStyle');
         }
     };
@@ -295,7 +311,7 @@ var VirtualKeyboard = /** @class */ (function () {
                 this.isShiftOn = !this.isShiftOn;
                 this.toLowerCase();
             }
-            if (!(this.htmlLayoutIds.includes(event.target.id))) {
+            if (!(this.htmlLayoutIds.indexOf(event.target.id) >= 0)) {
                 if (event.target.id == this.spacebar) {
                     textArea.textContent += " ";
                 }
@@ -331,7 +347,7 @@ var VirtualKeyboard = /** @class */ (function () {
     };
     VirtualKeyboard.prototype.isAlphabetKeys = function (e) {
         for (var i = 0; i < this.alphabetKeys.length; i++) {
-            if (this.alphabetKeys[i] == e) {
+            if (String.fromCharCode(this.alphabetKeys[i]).toLowerCase() == String.fromCharCode(e).toLowerCase()) {
                 return true;
             }
         }
