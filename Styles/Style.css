@@ -32,10 +32,10 @@
 }
 
 .keyboard {
-    min-width: 70rem;
+    min-width: 66rem;
     min-height: 23rem;
     height: 23rem;
-    width: 70rem;
+    width: 66rem;
     /* background: #111; */
 }
 
@@ -70,7 +70,7 @@ span {
 }
 
 .btn:hover {
-    background: #797979;
+    background: #ffffff88;
     color: #fff;
 }
 
@@ -82,4 +82,11 @@ span {
 .not-selected {
     background: #fff;
     color: #111;
+}
+
+.vk-container {
+    min-width: 68rem;
+    width: 68rem;
+    background: #2f2c2c;
+    border-radius: 0.8rem;
 }

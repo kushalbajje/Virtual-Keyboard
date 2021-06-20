@@ -41,9 +41,9 @@ var VirtualKeyboard = /** @class */ (function () {
     function VirtualKeyboard() {
         this.alphabetKeys = [];
         this.buttons = [];
-        this.keyboardKeys = [];
         this.numberKeys = [];
         this.specialCharacters = [];
+        this.htmlLayoutIds = [];
         // html elements to modify html content
         this.keyboardLayout = null;
         this.firstRowLayout = null;
@@ -51,14 +51,11 @@ var VirtualKeyboard = /** @class */ (function () {
         this.thirdRowLayout = null;
         this.fourthRowLayout = null;
         this.fifthRowLayout = null;
-        this.rightFunctionalKeys = null;
-        this.leftFunctionalKeys = null;
         // members to access each row of keys
         this.firstRowKeys = [];
         this.secondRowKeys = [];
         this.thirdRowKeys = [];
         this.fourthRowKeys = [];
-        this.fifthRowKeys = [];
         // constants for function keys
         this.backSpace = 500;
         this.tab = 501;
@@ -92,6 +89,7 @@ var VirtualKeyboard = /** @class */ (function () {
         this.isCapsLockOn = false;
         this.isShiftOn = false;
         this.specialCharacters = [126, 33, 64, 35, 36, 37, 94, 38, 42, 40, 41, 95, 43];
+        this.htmlLayoutIds = ['keyboard', 'first-row', 'second-row', 'third-row', 'fourth-row', '', "" + this.shift, "" + this.capsLock];
         this.keyboardLayout = document === null || document === void 0 ? void 0 : document.getElementById('keyboard');
         this.firstRowLayout = document === null || document === void 0 ? void 0 : document.getElementById('first-row');
         this.secondRowLayout = document === null || document === void 0 ? void 0 : document.getElementById('second-row');
@@ -173,11 +171,11 @@ var VirtualKeyboard = /** @class */ (function () {
             primaryKeyContent.id = "" + this.buttons[i].id;
             if (this.buttons[i].row == 1) {
                 if (this.buttons[i].id === this.backSpace) {
-                    key.className = 'keyLayout2 primaryKeyStyle car btn mx-1 d-grid';
+                    key.className = 'keyLayout2 primaryKeyStyle car btn shadow mx-1 d-grid';
                     primaryKeyContent.innerHTML = "Backspace";
                 }
                 else {
-                    key.className = 'keyLayout1 primaryKeyStyle car btn mx-1 d-grid';
+                    key.className = 'keyLayout1 primaryKeyStyle car btn shadow mx-1 d-grid';
                     primaryKeyContent.innerHTML = this.buttons[i].text;
                 }
                 key.append(primaryKeyContent);
@@ -246,12 +244,12 @@ var VirtualKeyboard = /** @class */ (function () {
         }
         if (this.isCapsLockOn && !this.isShiftOn) {
             var capsLockKey = document.getElementById("" + this.capsLock);
-            capsLockKey.className = 'keyLayout3 primaryKeyStyle car btn mx-1 text-center selected';
+            capsLockKey.className = 'keyLayout3 primaryKeyStyle car btn shadow mx-1 text-center selected';
             this.toUpperCase();
         }
         else if (!this.isCapsLockOn && !this.isShiftOn) {
             var capsLockKey = document.getElementById("" + this.capsLock);
-            capsLockKey.className = 'keyLayout3 primaryKeyStyle car btn mx-1 text-center not-selected';
+            capsLockKey.className = 'keyLayout3 primaryKeyStyle car btn shadow mx-1 text-center not-selected';
             this.toLowerCase();
         }
         else if (this.isShiftOn && !this.isCapsLockOn) {
@@ -297,17 +295,7 @@ var VirtualKeyboard = /** @class */ (function () {
                 this.isShiftOn = !this.isShiftOn;
                 this.toLowerCase();
             }
-            if (
-            // TODO: can rewrite it with string.classNames.contains()
-            !(event.target.id == 'second-row' ||
-                event.target.id == 'first-row' ||
-                event.target.id == 'third-row' ||
-                event.target.id == 'fourth-row' ||
-                event.target.id == 'fifth-row' ||
-                event.target.id == '' ||
-                event.target.id == this.shift ||
-                event.target.id == 'keyboard' ||
-                event.target.id == this.capsLock)) {
+            if (!(this.htmlLayoutIds.includes(event.target.id))) {
                 if (event.target.id == this.spacebar) {
                     textArea.textContent += " ";
                 }

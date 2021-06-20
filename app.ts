@@ -18,32 +18,28 @@ class Button {
 
 class VirtualKeyboard {
 
-    public alphabetKeys: Array<number> = [];
-    public buttons: IButton[] = [];
-    public keyboardKeys: Array<number> = [];
-    public numberKeys: Array<number> = [];
-    public specialCharacters: Array<number> = [];
+    private alphabetKeys: Array<number> = [];
+    private buttons: IButton[] = [];
+    private numberKeys: Array<number> = [];
+    private specialCharacters: Array<number> = [];
+    private htmlLayoutIds: Array<string> = [];
 
     // html elements to modify html content
-    public keyboardLayout: HTMLElement = null;
-    public firstRowLayout: HTMLElement = null;
-    public secondRowLayout: HTMLElement = null;
-    public thirdRowLayout: HTMLElement = null;
-    public fourthRowLayout: HTMLElement = null;
-    public fifthRowLayout: HTMLElement = null;
+    private keyboardLayout: HTMLElement = null;
+    private firstRowLayout: HTMLElement = null;
+    private secondRowLayout: HTMLElement = null;
+    private thirdRowLayout: HTMLElement = null;
+    private fourthRowLayout: HTMLElement = null;
+    private fifthRowLayout: HTMLElement = null;
 
-    public rightFunctionalKeys: HTMLElement = null;
-    public leftFunctionalKeys: HTMLElement = null;
-
-    public isCapsLockOn: boolean;
-    public isShiftOn: boolean;
+    private isCapsLockOn: boolean;
+    private isShiftOn: boolean;
 
     // members to access each row of keys
-    public firstRowKeys: Array<number> = [];
-    public secondRowKeys: Array<number> = [];
-    public thirdRowKeys: Array<number> = [];
-    public fourthRowKeys: Array<number> = [];
-    public fifthRowKeys: Array<number> = [];
+    private firstRowKeys: Array<number> = [];
+    private secondRowKeys: Array<number> = [];
+    private thirdRowKeys: Array<number> = [];
+    private fourthRowKeys: Array<number> = [];
 
     // constants for function keys
     private backSpace: number = 500;
@@ -115,6 +111,7 @@ class VirtualKeyboard {
         this.isCapsLockOn = false;
         this.isShiftOn = false;
         this.specialCharacters = [126, 33, 64, 35, 36, 37, 94, 38, 42, 40, 41, 95, 43];
+        this.htmlLayoutIds = ['keyboard', 'first-row', 'second-row', 'third-row', 'fourth-row', '', `${this.shift}`, `${this.capsLock}`];
         this.keyboardLayout = document?.getElementById('keyboard');
         this.firstRowLayout = document?.getElementById('first-row');
         this.secondRowLayout = document?.getElementById('second-row');
@@ -130,7 +127,6 @@ class VirtualKeyboard {
             this.alphabetKeys.push(i);
         }
     }
-
 
     private generateMetadataForFirstRow() {
         // ASCII value for numbers range from 49 to 60
@@ -193,6 +189,7 @@ class VirtualKeyboard {
 
         this.buttons.push(new Button(this.spacebar, 5, String.fromCharCode(this.spacebar)));
     }
+
     private initializeButtonsForEachRow(currentRow: number[], rowIndex: number) {
         return currentRow.forEach((rowItem: number) => {
             this.buttons.push(new Button(rowItem, rowIndex, String.fromCharCode(rowItem)));
@@ -207,10 +204,10 @@ class VirtualKeyboard {
             primaryKeyContent.id = `${this.buttons[i].id}`;
             if (this.buttons[i].row == 1) {
                 if (this.buttons[i].id === this.backSpace) {
-                    key.className = 'keyLayout2 primaryKeyStyle car btn mx-1 d-grid';
+                    key.className = 'keyLayout2 primaryKeyStyle car btn shadow mx-1 d-grid';
                     primaryKeyContent.innerHTML = `Backspace`;
                 } else {
-                    key.className = 'keyLayout1 primaryKeyStyle car btn mx-1 d-grid';
+                    key.className = 'keyLayout1 primaryKeyStyle car btn shadow mx-1 d-grid';
                     primaryKeyContent.innerHTML = this.buttons[i].text;
                 }
                 key.append(primaryKeyContent);
@@ -277,11 +274,11 @@ class VirtualKeyboard {
 
         if (this.isCapsLockOn && !this.isShiftOn) {
             let capsLockKey = document.getElementById(`${this.capsLock}`);
-            capsLockKey.className = 'keyLayout3 primaryKeyStyle car btn mx-1 text-center selected';
+            capsLockKey.className = 'keyLayout3 primaryKeyStyle car btn shadow mx-1 text-center selected';
             this.toUpperCase();
         } else if (!this.isCapsLockOn && !this.isShiftOn) {
             let capsLockKey = document.getElementById(`${this.capsLock}`);
-            capsLockKey.className = 'keyLayout3 primaryKeyStyle car btn mx-1 text-center not-selected';
+            capsLockKey.className = 'keyLayout3 primaryKeyStyle car btn shadow mx-1 text-center not-selected';
             this.toLowerCase();
         } else if (this.isShiftOn && !this.isCapsLockOn) {
             this.toUpperCase();
@@ -316,7 +313,7 @@ class VirtualKeyboard {
         if (this.isAlphabetKeys(Number(key))) {
             this.shuffle(this.alphabetKeys);
         }
-        
+
         for (let i = 97, j = 0; i < 123; i++, j++) {
             let characterKey = document.getElementById(`${i}`);
             characterKey.innerHTML = `${String.fromCharCode(this.alphabetKeys[j])}`;
@@ -334,18 +331,7 @@ class VirtualKeyboard {
                 this.toLowerCase();
             }
 
-            if (
-                // TODO: can rewrite it with string.classNames.contains()
-                !(event.target.id == 'second-row' ||
-                    event.target.id == 'first-row' ||
-                    event.target.id == 'third-row' ||
-                    event.target.id == 'fourth-row' ||
-                    event.target.id == 'fifth-row' ||
-                    event.target.id == '' ||
-                    event.target.id == this.shift ||
-                    event.target.id == 'keyboard' ||
-                    event.target.id == this.capsLock)
-            ) {
+            if (!(this.htmlLayoutIds.includes(event.target.id))) {
                 if (event.target.id == this.spacebar) {
                     textArea.textContent += " ";
                 } else if (event.target.id == this.backSpace) {
