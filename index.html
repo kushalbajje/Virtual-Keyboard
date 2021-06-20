@@ -13,28 +13,24 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <title>Numpad</title>
+    <title>Virtual Keyboard</title>
 </head>
 
 
 <body>
-    <div class="container-fluid p-3">
-        <div class="row no-gutters">
-            <div class="col-12 text-center">
-                <textarea type="textarea" class="input" id="output" rows="4"></textarea>
-
-            </div>
+    <div class=" container d-flex flex-column  p-3" style="background: #111;">
+        <div>
+            <textarea type="textarea" class="input" id="output" rows="4"></textarea>
         </div>
 
 
-        <div class="container keyboard py-2" id="keyboard">
-            <div class="row no-gutters my-1" id="first-row">
 
-            </div>
-            <div class="row no-gutters my-1" id="second-row"></div>
-            <div class="row no-gutters my-1" id="third-row"></div>
-            <div class="row no-gutters my-1" id="fourth-row"></div>
-            <div class="row no-gutters my-1" id="fifth-row"></div>
+        <div class=" keyboard py-2" id="keyboard">
+            <div class="d-flex my-1" id="first-row"></div>
+            <div class="d-flex my-1" id="second-row"></div>
+            <div class="d-flex my-1" id="third-row"></div>
+            <div class="d-flex my-1" id="fourth-row"></div>
+            <div class="d-flex my-1" id="fifth-row"></div>
         </div>
     </div>
 

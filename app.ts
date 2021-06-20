@@ -54,6 +54,30 @@ class VirtualKeyboard {
     private spacebar: number = 505;
 
 
+    private primaryToSecondaryAsciiMap = {
+        '96': '126',
+        '49': '33',
+        '50': '64',
+        '51': '35',
+        '52': '36',
+        '53': '37',
+        '54': '94',
+        '55': '38',
+        '56': '42',
+        '57': '40',
+        '48': '41',
+        '45': '95',
+        '61': '43',
+        '91': '123',
+        '93': '125',
+        '92': '124',
+        '59': '58',
+        '39': '34',
+        '44': '60',
+        '46': '62',
+        '47': '63',
+    }
+
     /**
      * ascii values for special chars
      * !	33	exclamation mark
@@ -86,13 +110,6 @@ class VirtualKeyboard {
      * `	96	grave accent
      */
 
-    private leftSquareBracket: number = 91;
-    private backslash: number = 92;
-    private rightSquareBracket: number = 93;
-    private caret: number = 94;
-    private underscore: number = 95;
-    private graveAccent: number = 96;
-
     constructor() {
 
         this.isCapsLockOn = false;
@@ -108,16 +125,17 @@ class VirtualKeyboard {
         this.keyboardLayout.addEventListener('click', this.clickKeyboard.bind(this));
     }
 
-    public generateMetadataForAlphabets() {
+    private generateMetadataForAlphabets() {
         for (let i = 97; i < 123; i++) {
             this.alphabetKeys.push(i);
         }
     }
 
-    public generateMetadataForFirstRow() {
+
+    private generateMetadataForFirstRow() {
         // ASCII value for numbers range from 49 to 60
-        this.numberKeys.push(this.graveAccent);
-        for (let i = 49, j = 0; i < 58; i++) {
+        this.numberKeys.push(96);
+        for (let i = 49; i < 58; i++) {
             this.numberKeys.push(i);
         }
         this.numberKeys.push(48);
@@ -127,7 +145,7 @@ class VirtualKeyboard {
         this.firstRowKeys = this.numberKeys;
     }
 
-    public generateMetadataForSecondRow() {
+    private generateMetadataForSecondRow() {
         this.secondRowKeys.push(501);
         for (let i = 0; i < 10; i++) {
             this.secondRowKeys.push(this.alphabetKeys[i]);
@@ -137,28 +155,28 @@ class VirtualKeyboard {
         this.secondRowKeys.push(92);
     }
 
-    public generateMetadataForThirdRow() {
+    private generateMetadataForThirdRow() {
         this.thirdRowKeys.push(502);
         for (let i = 10; i < 19; i++) {
             this.thirdRowKeys.push(this.alphabetKeys[i]);
         }
+        this.thirdRowKeys.push(59);
         this.thirdRowKeys.push(39);
-        this.thirdRowKeys.push(44);
         this.thirdRowKeys.push(503);
     }
 
-    public generateMetadataForFourthRow() {
+    private generateMetadataForFourthRow() {
         this.fourthRowKeys.push(504);
         for (let i = 19; i < 26; i++) {
             this.fourthRowKeys.push(this.alphabetKeys[i]);
         }
-        this.fourthRowKeys.push(59);
+        this.fourthRowKeys.push(44);
         this.fourthRowKeys.push(46);
         this.fourthRowKeys.push(47);
         this.fourthRowKeys.push(504);
     }
 
-    public generateMetadataForEachRow() {
+    private generateMetadataForEachRow() {
         this.generateMetadataForAlphabets();
         this.generateMetadataForFirstRow();
         this.generateMetadataForSecondRow();
@@ -166,7 +184,7 @@ class VirtualKeyboard {
         this.generateMetadataForFourthRow();
     }
 
-    public createButtons() {
+    private createButtons() {
 
         this.initializeButtonsForEachRow(this.firstRowKeys, 1);
         this.initializeButtonsForEachRow(this.secondRowKeys, 2);
@@ -175,146 +193,177 @@ class VirtualKeyboard {
 
         this.buttons.push(new Button(this.spacebar, 5, String.fromCharCode(this.spacebar)));
     }
-
-    public initializeButtonsForEachRow(currentRow: number[], rowIndex: number) {
+    private initializeButtonsForEachRow(currentRow: number[], rowIndex: number) {
         return currentRow.forEach((rowItem: number) => {
             this.buttons.push(new Button(rowItem, rowIndex, String.fromCharCode(rowItem)));
         })
     }
 
-
-    public createKeyboard() {
+    private createKeyboard() {
         for (let i = 0; i < this.buttons.length; i++) {
-            const currentKeyButton: HTMLButtonElement = document.createElement('button');
-            currentKeyButton.id = `${this.buttons[i].id}`;
+            const key = document.createElement('div');
+            const primaryKeyContent = document.createElement('span');
+            key.id = `${this.buttons[i].id}`;
+            primaryKeyContent.id = `${this.buttons[i].id}`;
             if (this.buttons[i].row == 1) {
                 if (this.buttons[i].id === this.backSpace) {
-                    currentKeyButton.className = 'keyLayout2 car btn mx-1 text-center';
-                    currentKeyButton.innerHTML = `Backspace`;
+                    key.className = 'keyLayout2 primaryKeyStyle car btn mx-1 d-grid';
+                    primaryKeyContent.innerHTML = `Backspace`;
                 } else {
-                    currentKeyButton.className = 'keyLayout1 car btn mx-1 text-center';
-                    currentKeyButton.innerHTML = this.buttons[i].text;
+                    key.className = 'keyLayout1 primaryKeyStyle car btn mx-1 d-grid';
+                    primaryKeyContent.innerHTML = this.buttons[i].text;
                 }
-                this.firstRowLayout.appendChild(currentKeyButton);
+                key.append(primaryKeyContent);
+                this.firstRowLayout.appendChild(key);
                 this.keyboardLayout.appendChild(this.firstRowLayout);
             } else if (this.buttons[i].row == 2) {
 
                 if (this.buttons[i].id === this.tab) {
-                    currentKeyButton.className = 'keyLayout2 car btn mx-1 text-center';
-                    currentKeyButton.innerHTML = `Tab`;
+                    key.className = 'keyLayout2 primaryKeyStyle car btn mx-1 text-center';
+                    primaryKeyContent.innerHTML = `Tab`;
                 } else {
-                    currentKeyButton.className = 'keyLayout1 car btn mx-1 text-center';
-                    currentKeyButton.innerHTML = this.buttons[i].text;
+                    key.className = 'keyLayout1 primaryKeyStyle car btn mx-1 text-center';
+                    primaryKeyContent.innerHTML = this.buttons[i].text;
                 }
-                this.secondRowLayout.appendChild(currentKeyButton);
+                key.append(primaryKeyContent)
+                this.secondRowLayout.appendChild(key);
                 this.keyboardLayout.appendChild(this.secondRowLayout);
             } else if (this.buttons[i].row == 3) {
 
                 if (this.buttons[i].id === this.capsLock || this.buttons[i].id === this.enter) {
-                    currentKeyButton.className = 'keyLayout3 car btn mx-1 text-center';
-                    this.buttons[i].id === this.capsLock ? currentKeyButton.innerHTML = `Caps Lock` : undefined;
-                    this.buttons[i].id === this.enter ? currentKeyButton.innerHTML = `Enter` : undefined;
+                    key.className = 'keyLayout3 primaryKeyStyle car btn mx-1 text-center not-selected';
+                    this.buttons[i].id === this.capsLock ? primaryKeyContent.innerHTML = `Caps Lock` : undefined;
+                    this.buttons[i].id === this.enter ? primaryKeyContent.innerHTML = `Enter` : undefined;
                 } else {
-                    currentKeyButton.className = 'keyLayout1 car btn mx-1 text-center';
-                    currentKeyButton.innerHTML = this.buttons[i].text;
+                    key.className = 'keyLayout1 primaryKeyStyle car btn mx-1 text-center';
+                    primaryKeyContent.innerHTML = this.buttons[i].text;
                 }
-                this.thirdRowLayout.appendChild(currentKeyButton);
+                key.append(primaryKeyContent)
+                this.thirdRowLayout.appendChild(key);
                 this.keyboardLayout.appendChild(this.thirdRowLayout);
             } else if (this.buttons[i].row == 4) {
 
                 if (this.buttons[i].id === this.shift) {
-                    currentKeyButton.className = 'keyLayout4 car btn mx-1 text-center';
-                    currentKeyButton.innerHTML = `Shift`;
+                    key.className = 'keyLayout4 primaryKeyStyle car btn mx-1 text-center not-selected';
+                    primaryKeyContent.innerHTML = `Shift`;
                 } else {
-                    currentKeyButton.className = 'keyLayout1 car btn mx-1 text-center';
-                    currentKeyButton.innerHTML = this.buttons[i].text;
+                    key.className = 'keyLayout1 primaryKeyStyle car btn mx-1 text-center';
+                    primaryKeyContent.innerHTML = this.buttons[i].text;
                 }
-                this.fourthRowLayout.appendChild(currentKeyButton);
+                key.append(primaryKeyContent)
+                this.fourthRowLayout.appendChild(key);
                 this.keyboardLayout.appendChild(this.fourthRowLayout);
             } else if (this.buttons[i].row == 5) {
 
-                currentKeyButton.className = 'keyLayout1 car btn mx-auto w-50';
-                currentKeyButton.id = `${this.spacebar}`;
-                currentKeyButton.innerHTML = `Space`;
-                this.fifthRowLayout.appendChild(currentKeyButton);
+                key.className = 'keyLayout1 primaryKeyStyle car btn mx-auto w-50';
+                primaryKeyContent.id = `${this.spacebar}`;
+                primaryKeyContent.innerHTML = `Space`;
+                key.append(primaryKeyContent)
+                this.fifthRowLayout.appendChild(key);
                 this.keyboardLayout.appendChild(this.fifthRowLayout);
             }
         }
     }
 
-    public updateKeyboard(key: string) {
+    private updateKeyboard(key: string) {
         switch (key) {
             case `${this.shift}`:
-                if (this.isCapsLockOn) {
-                    this.isShiftOn = false
-                } else if (!this.isCapsLockOn) {
-                    this.isShiftOn = true
-                }
-                if (this.isShiftOn) {
-                    this.toUpperCase();
-                } else if (!this.isShiftOn) {
-                    this.toLowerCase();
-                }
+                this.isShiftOn = !this.isShiftOn;
                 break;
             case `${this.capsLock}`: this.isCapsLockOn = !this.isCapsLockOn;
-                if (this.isCapsLockOn) {
-                    this.toUpperCase();
-                } else if (!this.isCapsLockOn) {
-                    this.toLowerCase();
-                }
                 break;
             default: break;
         }
-        for (let i = 97, j = 0; i < 123; i++, j++) {
-            let characterKey = document.getElementById(`${i}`);
-            characterKey.innerHTML = `${String.fromCharCode(this.alphabetKeys[j])}`;
-        }
-    }
 
-
-    public clickKeyboard(event) {
-        if (event && event.target) {
-            event.stopPropagation();
-        const textArea = document.getElementById('output');
-        if (this.isShiftOn) {
-            this.isShiftOn = !this.isShiftOn;
+        if (this.isCapsLockOn && !this.isShiftOn) {
+            let capsLockKey = document.getElementById(`${this.capsLock}`);
+            capsLockKey.className = 'keyLayout3 primaryKeyStyle car btn mx-1 text-center selected';
+            this.toUpperCase();
+        } else if (!this.isCapsLockOn && !this.isShiftOn) {
+            let capsLockKey = document.getElementById(`${this.capsLock}`);
+            capsLockKey.className = 'keyLayout3 primaryKeyStyle car btn mx-1 text-center not-selected';
+            this.toLowerCase();
+        } else if (this.isShiftOn && !this.isCapsLockOn) {
+            this.toUpperCase();
+        } else if (this.isCapsLockOn && this.isShiftOn) {
             this.toLowerCase();
         }
 
-        if (
-            // TODO: can rewrite it with string.classNames.contains()
-            !(event.target.id == 'second-row' ||
-            event.target.id == 'fisrt-row' ||
-            event.target.id == 'third-row' ||
-            event.target.id == 'fourth-row' ||
-            event.target.id == 'fifth-row' ||
-            event.target.id == '' ||
-            event.target.id == this.shift ||
-            event.target.id == 'keyboard' ||
-            event.target.id == this.capsLock)
-        ) {
-            if (event.target.id == this.spacebar) {
-                textArea.textContent += " ";
-            } else if (event.target.id == this.backSpace) {
-                textArea.textContent = textArea.textContent.slice(0, textArea.textContent.length - 1);
-            } else if (event.target.id == this.enter) {
-                textArea.innerHTML += "\n";
-            } else if (event.target.id == this.tab) {
-                textArea.innerHTML += "    ";
-            } else {
-                textArea.textContent += event.target.textContent;
+        if (this.isShiftOn) {
+            // If shift is ON then updating the keys to show special characters 
+            for (let i = 0; i < this.buttons.length; i++) {
+
+                if (this.primaryToSecondaryAsciiMap[this.buttons[i].id]) {
+                    let primaryKeyContent = document.getElementById(`${this.buttons[i].id}`);
+                    primaryKeyContent.innerHTML = `${String.fromCharCode(Number(this.primaryToSecondaryAsciiMap[this.buttons[i].id]))}`;
+                    primaryKeyContent.classList.add('primaryKeyStyle');
+                }
             }
+        } else if (!this.isShiftOn) {
+            // If shift is OFF then updating the keys to normal keys (primary keys) 
+            for (let i = 0; i < this.buttons.length; i++) {
+
+                if (this.primaryToSecondaryAsciiMap[this.buttons[i].id]) {
+                    let primaryKeyContent = document.getElementById(`${this.buttons[i].id}`);
+                    primaryKeyContent.innerHTML = `${String.fromCharCode(this.buttons[i].id)}`;
+                    primaryKeyContent.classList.add('primaryKeyStyle');
+                }
+            }
+
         }
 
-        if (this.isAlphabetKeys(event.target.id)) {
+        // This block shuffels the alphabet in the keyboard when an alphabet is pressed
+        if (this.isAlphabetKeys(Number(key))) {
             this.shuffle(this.alphabetKeys);
         }
+        
+        for (let i = 97, j = 0; i < 123; i++, j++) {
+            let characterKey = document.getElementById(`${i}`);
+            characterKey.innerHTML = `${String.fromCharCode(this.alphabetKeys[j])}`;
+            characterKey.classList.add('primaryKeyStyle');
+        }
 
-        this.updateKeyboard(event.target.id);
+    }
+
+    private clickKeyboard(event) {
+
+        if (event && event.target) {
+            const textArea = document.getElementById('output');
+            if (this.isShiftOn && event.target.id != this.shift) {
+                this.isShiftOn = !this.isShiftOn;
+                this.toLowerCase();
+            }
+
+            if (
+                // TODO: can rewrite it with string.classNames.contains()
+                !(event.target.id == 'second-row' ||
+                    event.target.id == 'first-row' ||
+                    event.target.id == 'third-row' ||
+                    event.target.id == 'fourth-row' ||
+                    event.target.id == 'fifth-row' ||
+                    event.target.id == '' ||
+                    event.target.id == this.shift ||
+                    event.target.id == 'keyboard' ||
+                    event.target.id == this.capsLock)
+            ) {
+                if (event.target.id == this.spacebar) {
+                    textArea.textContent += " ";
+                } else if (event.target.id == this.backSpace) {
+                    textArea.textContent = textArea.textContent.slice(0, textArea.textContent.length - 1);
+                } else if (event.target.id == this.enter) {
+                    textArea.innerHTML += "\n";
+                } else if (event.target.id == this.tab) {
+                    textArea.innerHTML += "    ";
+                } else {
+                    textArea.textContent += event.target.textContent;
+                }
+            }
+
+            this.updateKeyboard(event.target.id);
         }
     }
 
-    public shuffle(a: number[]) {
+    private shuffle(a: number[]) {
         for (let i = a.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [a[i], a[j]] = [a[j], a[i]];
@@ -322,15 +371,15 @@ class VirtualKeyboard {
         this.alphabetKeys = a;
     }
 
-    public toUpperCase() :void {
-        this.alphabetKeys = this.alphabetKeys.map((currentKey) => { return currentKey -= 32 });
+    private toUpperCase(): void {
+        this.alphabetKeys = this.alphabetKeys.map((currentKey) => { return String.fromCharCode(currentKey).toUpperCase().charCodeAt(0) });
     }
 
-    public toLowerCase(): void {
-        this.alphabetKeys = this.alphabetKeys.map((currentKey) => { return currentKey += 32 });
+    private toLowerCase(): void {
+        this.alphabetKeys = this.alphabetKeys.map((currentKey) => { return String.fromCharCode(currentKey).toLowerCase().charCodeAt(0) });
     }
 
-    public isAlphabetKeys(e: number): boolean {
+    private isAlphabetKeys(e: number): boolean {
 
         for (let i = 0; i < this.alphabetKeys.length; i++) {
             if (this.alphabetKeys[i] == e) {
@@ -349,13 +398,10 @@ class VirtualKeyboard {
     }
 }
 
-
-
-
-
-const sampleKeyboard = new VirtualKeyboard();
-
-sampleKeyboard.renderKeyBoard();
+(() => {
+    const sampleKeyboard = new VirtualKeyboard();
+    sampleKeyboard.renderKeyBoard();
+})();
 
 
 

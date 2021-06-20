@@ -3,40 +3,83 @@
 }
 
 .keyLayout1 {
-    height: 6vh;
-    width: 6vh;
+    min-height: 4rem;
+    min-width: 4rem;
+    height: 4rem;
+    width: 4rem;
     text-align: center;
 }
 
 .keyLayout2 {
-    height: 6vh;
-    width: 10vh;
+    min-height: 4rem;
+    min-width: 7rem;
+    height: 4rem;
+    width: 7rem;
 }
 
 .keyLayout3 {
-    height: 6vh;
-    width: 11.4vh;
+    min-height: 4rem;
+    min-width: 7.8rem;
+    height: 4rem;
+    width: 7.8rem;
 }
 
 .keyLayout4 {
-    height: 6vh;
-    width: 14.8vh;
+    min-height: 4rem;
+    min-width: 10rem;
+    height: 4rem;
+    width: 10rem;
 }
 
 .keyboard {
-    min-width: 500px;
-    background: #111;
+    min-width: 70rem;
+    min-height: 23rem;
+    height: 23rem;
+    width: 70rem;
+    /* background: #111; */
 }
 
-.row {
-    justify-content: center;
-}
-
-p {
+span {
     font-family: sans-serif;
-    font-weight: 500;
+    font-weight: 700;
 }
 
 .input {
-    width: 60%;
+    min-width: 66rem;
+    width: 66rem;
+}
+
+.btn {
+    cursor: pointer;
+}
+
+.secondaryKeyStyle {
+    font-family: sans-serif;
+    font-weight: 700;
+    float: left;
+}
+
+.primaryKeyStyle {
+    font-family: sans-serif;
+    font-weight: 700;
+    padding-top: 1.25rem;
+}
+
+.d-grid {
+    display: grid;
+}
+
+.btn:hover {
+    background: #797979;
+    color: #fff;
+}
+
+.selected {
+    background: #797979;
+    color: #fff;
+}
+
+.not-selected {
+    background: #fff;
+    color: #111;
 }
